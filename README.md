@@ -1,1 +1,1 @@
-# Machine-Learning-Python-Scratch
+# Machine-Learning-Python

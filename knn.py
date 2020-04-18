@@ -36,7 +36,7 @@ def distance(data1,data2):
     for i in range(len(data1)):
         dist+=(data1[i]-data2[i])**2
     return math.sqrt(dist)
-
+'''
 def knn(k,data,target):
     new=[]
     for i in data:
@@ -47,6 +47,18 @@ def knn(k,data,target):
     for j in range(len(new[:k])):
         output_index.append(data.index(new[:k][j][1]))
     return output_index
+'''
+def find_k_neighbours(k,data_in,target):
+    tmp=[]
+    for index,item in enumerate(data_in):
+        dist=distance(item,target)
+        tmp.append((dist,index))
+        tmp.sort(key=lambda x:x[0])
+    output_index=[]
+    for i in range(k):    
+        output_index.append(tmp[:k][i][1])
+    return output_index
+
 
 def prediction(output_index,target,label,k,classification):
     if classification==1:# knn classification

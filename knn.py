@@ -94,3 +94,120 @@ def prediction(output_index,target,label,k,classification):
 
 out=knn(k,data,target)
 prediction(out,target,label,k,classification=0)
+
+
+
+
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Apr 18 15:43:10 2020
+
+@author: 76754
+"""
+
+
+########################kd tree################################
+def calculate_distance(data1,data2):
+    dist=0.0
+    for item in range(len(data1)):
+        dist+=(data1[item]-data2[item])**2
+    return math.sqrt(dist)
+
+def closet_point(data,target):
+    best=None
+    point=None
+    for i,item in enumerate(data):
+        dist=calculate_distance(item,target)
+        if best==None or dist<best:
+            best=dist
+            point=i
+    return point
+closet_point(data,target)
+
+
+def build_kdtree(data,depth=0,k=5):
+    n=len(data)
+    if n<=0:
+        return None
+    axis=depth%k
+    tmp=sorted(data,key=lambda a:a[axis])
+    return {'root': tmp[n//2],
+            'left': build_kdtree(tmp[:n//2],depth=depth+1,k=5),
+            'right': build_kdtree(tmp[n//2+1:],depth=depth+1,k=5)
+            }
+tree=(build_kdtree(data,depth=0,k=5))
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
+pp.pprint(build_kdtree(data))
+
+
+
+def select_close_distance(target,data1,data2):
+    if data1 is None:
+        return data2
+    if data2 is None:
+        return data1
+    dist1=calculate_distance(data1,target)
+    dist2=calculate_distance(data2,target)
+    if dist1<dist2:
+        return data1
+    else:
+        return data2
+    
+def kdtree_closet(tree,target,depth=0):
+    if tree is None:
+        return None
+    next_branch=None
+    opposite_branch=None
+    axis=depth%k
+    
+    if tree['root'][axis]<target[axis]:
+        next_branch=tree['right']
+        opposite_branch=tree['left']
+    else:
+        next_branch=tree['left']
+        opposite_branch=tree['right']
+    best=select_close_distance(target,kdtree_closet(next_branch,target,depth=depth+1),tree['root'])
+    if calculate_distance(best,target)>math.sqrt((tree['root'][axis]-target[axis])**2):
+        best=select_close_distance(target,kdtree_closet(opposite_branch,target,depth=depth+1),best)
+
+kdtree_closet(tree,target,depth=0)
+
+def kdtree_closet(tree,target,depth=0):
+    if tree is None:
+        return None
+    next_branch=None
+    opposite_branch=None
+    axis=depth%k
+    
+    if tree['root'][axis]<target[axis]:
+        next_branch=tree['right']
+        opposite_branch=tree['left']
+    else:
+        next_branch=tree['left']
+        opposite_branch=tree['right']
+
+    best=select_close_distance(target,kdtree_closet(next_branch,target,depth=depth+1),tree['root'])
+    if calculate_distance(best,target)>math.sqrt((tree['root'][axis]-target[axis])**2):
+        best=select_close_distance(target,kdtree_closet(opposite_branch,target,depth=depth+1),best)
+
+    return best
+
+kdtree_closet(tree,target,depth=0)
+
+
+
+
+def run(tree,node=0,action=None):
+    a.append(node)
+    print(a)    
+    print(tree['root'],'Layer is ',node,action)
+    if tree['left']:
+        action='left'
+        run(tree['left'],node=node+1,action=action)
+    if tree['right']:
+        action='right'
+        run(tree['right'],node=node+1,action=action)
+a=[]
+
+run(tree,node=0,action=None)

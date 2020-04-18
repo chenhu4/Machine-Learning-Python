@@ -32,12 +32,23 @@ print(neigh.predict([target]))
 
 #################Scratch################
 def distance(data1,data2):
+'''
+input: two data samples
+output: distance between two samples
+
+data1:sample1 
+data2:sample2
+
+idea: Calculate distance between two samples by using formula sqrt(sum((s1.-s2.)^2))
+'''
     dist=0.0
     for i in range(len(data1)):
         dist+=(data1[i]-data2[i])**2
     return math.sqrt(dist)
 '''
 def knn(k,data,target):
+
+
     new=[]
     for i in data:
         dist=distance(i,target)
@@ -49,6 +60,16 @@ def knn(k,data,target):
     return output_index
 '''
 def find_k_neighbours(k,data_in,target):
+'''
+       
+input: Total number of nearest neighbours,training data, testing data
+output: The #k index of the nearest neighbours
+
+idea: 
+1.using for loop to calculate distances between all the traing data and the testing data.
+2.sorting the tuple(distance,index) by distance. 
+3.select the smallest k tuples and output the index.
+'''
     tmp=[]
     for index,item in enumerate(data_in):
         dist=distance(item,target)
